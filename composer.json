@@ -1,0 +1,24 @@
+{
+    "name": "minhaz-dev/base-events",
+    "description": "Base Events — events management with recurring-event scheduling.",
+    "keywords": [
+        "Wordpress",
+        "Plugin"
+    ],
+    "type": "wordpress-plugin",
+    "version": "2.0.14",
+    "authors": [
+        {
+            "name": "Minhaz Uddin",
+            "homepage": "https://github.com/minhaz-dev"
+        }
+    ],
+    "require": {
+        "rlanvin/php-rrule": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "BaseEvents\\": "src/"
+        }
+    }
+}

@@ -1,0 +1,232 @@
+[
+    {
+        "key": "group_5c9e2b06ce584",
+        "title": "Plugin: BCFS Events",
+        "fields": [
+            {
+                "key": "field_5c9e2b06d6671",
+                "label": "Event Schedule",
+                "name": "event_schedule",
+                "type": "repeater",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "collapsed": "",
+                "min": 0,
+                "max": 0,
+                "layout": "block",
+                "button_label": "Add Date",
+                "sub_fields": [
+                    {
+                        "key": "field_5c9e2b06e5020",
+                        "label": "Add or Exclude Date?",
+                        "name": "add_or_exclude_date",
+                        "type": "true_false",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "message": "",
+                        "default_value": 1,
+                        "ui": 1,
+                        "ui_on_text": "Add",
+                        "ui_off_text": "Exclude"
+                    },
+                    {
+                        "key": "field_5c9e2b06e50b1",
+                        "label": "Start Date",
+                        "name": "start_date",
+                        "type": "date_time_picker",
+                        "instructions": "Use time 12:00am (default) for all day events. If adding an exclusion date, the time must match the add date.",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "display_format": "F j, Y g:i a",
+                        "return_format": "Y-m-d H:i:s",
+                        "first_day": 1
+                    },
+                    {
+                        "key": "field_5c9e2b06e5136",
+                        "label": "Repeating Date?",
+                        "name": "repeating_date",
+                        "type": "true_false",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "message": "",
+                        "default_value": 0,
+                        "ui": 1,
+                        "ui_on_text": "",
+                        "ui_off_text": ""
+                    },
+                    {
+                        "key": "field_5c9e2b06e51b8",
+                        "label": "End Date",
+                        "name": "end_date",
+                        "type": "date_time_picker",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": [
+                            [
+                                {
+                                    "field": "field_5c9e2b06e5136",
+                                    "operator": "==",
+                                    "value": "1"
+                                }
+                            ]
+                        ],
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "display_format": "F j, Y g:i a",
+                        "return_format": "Y-m-d H:i:s",
+                        "first_day": 1
+                    },
+                    {
+                        "key": "field_5c9e2b06e5239",
+                        "label": "Repeat Interval",
+                        "name": "repeat_interval",
+                        "type": "number",
+                        "instructions": "ex; 2 would be 'Repeat every 2 ...'",
+                        "required": 0,
+                        "conditional_logic": [
+                            [
+                                {
+                                    "field": "field_5c9e2b06e5136",
+                                    "operator": "==",
+                                    "value": "1"
+                                }
+                            ]
+                        ],
+                        "wrapper": {
+                            "width": "50",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": 1,
+                        "placeholder": "",
+                        "prepend": "",
+                        "append": "",
+                        "min": "",
+                        "max": "",
+                        "step": ""
+                    },
+                    {
+                        "key": "field_5c9e2b06e52bb",
+                        "label": "Repeat Frequency",
+                        "name": "repeat_frequency",
+                        "type": "select",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": [
+                            [
+                                {
+                                    "field": "field_5c9e2b06e5136",
+                                    "operator": "==",
+                                    "value": "1"
+                                }
+                            ]
+                        ],
+                        "wrapper": {
+                            "width": "50",
+                            "class": "",
+                            "id": ""
+                        },
+                        "choices": {
+                            "DAILY": "Day",
+                            "WEEKLY": "Week",
+                            "MONTHLY": "Month",
+                            "specific-days": "Specific Days"
+                        },
+                        "default_value": [],
+                        "allow_null": 0,
+                        "multiple": 0,
+                        "ui": 0,
+                        "return_format": "value",
+                        "ajax": 0,
+                        "placeholder": ""
+                    },
+                    {
+                        "key": "field_5c9e2b06e533f",
+                        "label": "Specific Days",
+                        "name": "specific_days",
+                        "type": "checkbox",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": [
+                            [
+                                {
+                                    "field": "field_5c9e2b06e52bb",
+                                    "operator": "==",
+                                    "value": "specific-days"
+                                },
+                                {
+                                    "field": "field_5c9e2b06e5136",
+                                    "operator": "==",
+                                    "value": "1"
+                                }
+                            ]
+                        ],
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "choices": {
+                            "sun": "Sunday",
+                            "mon": "Monday",
+                            "tue": "Tuesday",
+                            "wed": "Wednesday",
+                            "thu": "Thursday",
+                            "fri": "Friday",
+                            "sat": "Saturday"
+                        },
+                        "allow_custom": 0,
+                        "default_value": [],
+                        "layout": "horizontal",
+                        "toggle": 0,
+                        "return_format": "value",
+                        "save_custom": 0
+                    }
+                ]
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "post_type",
+                    "operator": "==",
+                    "value": "events"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": ""
+    }
+]
