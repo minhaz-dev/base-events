@@ -3,7 +3,7 @@
 Plugin Name: Base Events
 Plugin URI: https://github.com/minhaz-dev
 Description: Events management with recurring-event scheduling. Registers the `events` post type.
-Version: 2.0.14
+Version: 2.0.15
 Author: Minhaz
 */
 
@@ -16,7 +16,7 @@ $loader = require __DIR__ . '/vendor/autoload.php';
  * Current plugin version.
  * Start at version 1.0.0 and use SemVer - https://semver.org
  */
-define('BASE_EVENTS_VERSION', '2.0.14');
+define('BASE_EVENTS_VERSION', '2.0.15');
 
 use BaseEvents\Admin\AdminSettings;
 use BaseEvents\EventsManager;

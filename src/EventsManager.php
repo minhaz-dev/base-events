@@ -788,22 +788,34 @@ class EventsManager
 	 */
 	public function saveRepeatingEventData($post_id, $post, $update)
 	{
-		// Cancel if not an events post or if previewing changes
-		if (get_post_type() != 'events' || $post->post_type == 'revision') {
+		// Cancel if not an events post or if previewing changes.
+		// Note: pass $post_id explicitly — get_post_type() with no argument
+		// reads the global $post, which is not set during programmatic saves
+		// (WP-CLI, REST, importers), so schedules were never expanded there.
+		if (get_post_type($post_id) != 'events' || $post->post_type == 'revision') {
 			return;
 		}
 
 		$event_schedules = (array)get_field('event_schedule', $post_id);
 
 		// remove previous records from the table for this post (in case of update)
-		$this->delete();
+		// Pass $post_id — delete()/save() fall back to get_the_ID(), which is
+		// empty outside the loop and silently wrote rows with a blank event_id.
+		$this->delete($post_id);
 
 		// Return if no event schedules or if post is not set to published
 		if (empty($event_schedules) || get_post_status($post_id) !== 'publish') {
 			return;
 		}
 
-		// Build rrule set
+		// Build rrule set.
+		// Reset first: $this->rset lives on the instance, so without this a
+		// second event saved in the same request inherits the first one's
+		// dates. Never visible in wp-admin (one save per request), but it
+		// corrupts bulk or programmatic saves.
+		$this->rset = new RSet();
+		$this->duration = 0;
+
 		foreach ($event_schedules as $schedule) {
 			$event_schedule = (array)$schedule;
 			if ($event_schedule['add_or_exclude_date'] == true) {  // add dates
@@ -824,7 +836,7 @@ class EventsManager
 		}
 
 		// add data to table
-		$this->save();
+		$this->save($post_id);
 	}
 
 
@@ -868,11 +880,29 @@ class EventsManager
 			$end_date->setTimestamp($item->getTimestamp() + $this->duration);
 			$event = ['event_id' => (string)$post_id, 'end_date' => $end_date->format('Y-m-d H:i:s')];
 
-			$existing_events = $this->wpdb->get_results($this->wpdb->prepare("SELECT events FROM $this->tableName WHERE event_date = %s AND event_id = %s;", $item->format('Y-m-d H:i:s'), $post_id));
+			// event_id is not a column — 2.0.0 moved it inside the `events`
+			// JSON. Match on the date alone, then dedupe within the payload.
+			$existing_events = $this->wpdb->get_results($this->wpdb->prepare("SELECT events FROM $this->tableName WHERE event_date = %s;", $item->format('Y-m-d H:i:s')));
 
 			if (count($existing_events)) {
 				foreach ($existing_events as $existing_event) {
 					$events = json_decode($existing_event->events, true);
+					if (!is_array($events)) {
+						$events = [];
+					}
+
+					// Don't add the same event to a date twice.
+					$already = false;
+					foreach ($events as $existing) {
+						if (isset($existing['event_id']) && (string) $existing['event_id'] === (string) $post_id) {
+							$already = true;
+							break;
+						}
+					}
+					if ($already) {
+						continue;
+					}
+
 					$events[] = $event;
 					$this->wpdb->query($this->wpdb->prepare("UPDATE $this->tableName SET events = %s WHERE event_date = %s;", json_encode($events), $item->format('Y-m-d H:i:s')));
 				}
